@@ -1,0 +1,41 @@
+I = imread('grey_level_cat.jpeg');
+JNoise=imnoise(I,"gaussian");
+JPad = padarray(JNoise,1,0,"both");
+J = JPad;
+% Average!
+% for r = 2:size(J,1)-1
+%     for c= 2 :size(J,2)-1
+%         sum = 0;
+%         for maskY = c-1:c+1
+%             for maskX = r-1:r+1
+%                 sum = sum+ JPad(maskX,maskY);
+%             end
+%         end
+%         J(c,r) = sum/9;
+%     end
+% end
+
+% Median
+for r = 2:size(J,1)-1
+    for c=2 : size(J,2)-1
+        a = zeros(1,9);
+        i = 1;
+        for maskY = c-1:c+1
+            for maskX = r-1:r+1
+                a(1,i) = JPad(maskX,maskY);
+                i = i+1;
+            end
+        end
+        sort(a);
+        J(c,r) = a(5);
+    end
+end
+figure('NumberTitle','off','Name','Original');
+subplot(1,1,1);
+imshow(I);
+figure('NumberTitle','off','Name','Noise');
+subplot(1,1,1);
+imshow(JNoise);
+figure('NumberTitle','off','Name','Repair');
+subplot(1,1,1);
+imshow(J,[]);
